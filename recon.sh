@@ -7,6 +7,7 @@
 #3. For searching old urls 
 #4. For possibile subdomain takeover used tool called subjack
 #5. For website images gowitness
+#6. Scanning for open ports
 
 #Requiments GO and installed tools
 #Config before u start
