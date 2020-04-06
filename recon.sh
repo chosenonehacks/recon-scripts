@@ -16,6 +16,13 @@
 #set proper $PATH variables i.e.
 #echo $PATH
 #/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/root/go/bin
+#nano ~/.profile
+#export GOROOT=/usr/local/go
+#export GOPATH=$HOME/go
+#export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+#update current shell session
+#source ~/.profile
+#install tools
 #go get -u github.com/tomnomnom/assetfinder
 #go get -v -u github.com/OWASP/Amass/v3/...
 #go get -u github.com/tomnomnom/httprobe
@@ -65,14 +72,14 @@ if [ ! -f "$url/recon/final.txt" ];then
 fi
 
 echo "[+] Harvesting subdomains with assetfinder..."
-assetfinder $url >> $url/recon/assets.txt
+assetfinder --subs-only $url >> $url/recon/assets.txt
 cat $url/recon/assets.txt | grep $1 >> $url/recon/final.txt
-rm $url/recon/assets.txt
+#rm $url/recon/assets.txt
 
 echo "[+] Double checking for subdomains with amass..."
-amass enum -d $url >> $url/recon/f.txt
-sort -u $url/recon/f.txt >> $url/recon/final.txt
-rm $url/recon/f.txt
+amass enum -d $url >> $url/recon/amass.txt
+sort -u $url/recon/amass.txt >> $url/recon/final.txt
+#rm $url/recon/f.txt
 
 echo "[+] Probing for alive domains..."
 cat $url/recon/final.txt | sort -u | httprobe -s -p https:443 | sed 's/https\?:\/\///' | tr -d ':443' | tee -a $url/recon/httprobe/a.txt
