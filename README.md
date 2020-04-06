@@ -9,4 +9,4 @@ Script for initial recon
 5. For website images gowitness
 6. Scanning for open ports
 
-Uses tools wrriten in GO by github.com/tomnomnom
+Uses tools wrriten in GO by https://github.com/tomnomnom
