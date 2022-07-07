@@ -23,12 +23,12 @@
 #update current shell session
 #source ~/.profile
 #install tools
-#go get -u github.com/tomnomnom/assetfinder
-#go get -v -u github.com/OWASP/Amass/v3/...
-#go get -u github.com/tomnomnom/httprobe
-#go get -u github.com/tomnomnom/waybackurls
-#go get -u github.com/haccer/subjack
-#go get -u github.com/sensepost/gowitness
+#go install github.com/tomnomnom/assetfinder@latest
+#go install -v github.com/OWASP/Amass/v3/...@master
+#go install github.com/tomnomnom/waybackurls@latest
+#go install github.com/haccer/subjack@latest
+#go install github.com/tomnomnom/httprobe@latest
+#go install github.com/sensepost/gowitness@latest
 
 url=$1
 if [ ! -d "$url" ];then
@@ -92,7 +92,7 @@ if [ ! -f "$url/recon/potential_takeovers/potential_takeovers.txt" ];then
 	touch $url/recon/potential_takeovers/potential_takeovers.txt
 fi
 
-subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c ~/go/src/github.com/haccer/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt
+subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c subjack_config.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt
 
 echo "[+] Scanning for open ports..."
 nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt
@@ -139,5 +139,7 @@ rm $url/recon/wayback/extensions/aspx1.txt
 echo "[+] Running gowitness against all compiled domains..."
 #tried based on nmap dicovered services but results were poor
 #gowitness nmap -f myatos.net/recon/scans/scanned.txt.xml -d myatos.net/recon/gowitness
-gowitness file -s $url/recon/httprobe/alive.txt --prefix-https -d $url/recon/gowitness/https
-gowitness file -s $url/recon/httprobe/alive.txt --prefix-http -d $url/recon/gowitness/http
+gowitness file -f $url/recon/httprobe/alive.txt --no-http -P $url/recon/gowitness/https
+gowitness file -f $url/recon/httprobe/alive.txt --no-https -P $url/recon/gowitness/http
+
+echo "[+] Finished current scan..."
